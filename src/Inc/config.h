@@ -5,7 +5,6 @@
 
 #define MQTT_HOST "192.168.0.100"
 #define MQTT_PORT 1883
-#define MQTT_CLIENT_ID "esp32-smarthome"
 
 #define MQTT_CLIENT_ID "esp32-2"
 #define DEVICE_LOGIN "esp32_2"

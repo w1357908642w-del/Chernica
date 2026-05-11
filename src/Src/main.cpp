@@ -164,9 +164,17 @@ void setup() {
   deviceManager.begin(&storageManager, mqttPublishCallback);
 
   pinMode(2,OUTPUT);
+
+  Serial.println("BOOT");
+  Serial.println("Storage begin");
+  Serial.println("Sensors begin");
+  Serial.println("WiFi begin");
+  Serial.println("MQTT begin");
+  Serial.println("Setup done");
 }
 
 void loop() {
+    blinkLed();
   wifiManager.loop();
   mqttManager.loop(wifiManager.isConnected());
 
@@ -196,7 +204,7 @@ void loop() {
   if (now - lastMetricsSend >= METRICS_SEND_INTERVAL) {
     lastMetricsSend = now;
     sendSensors();
-    blinkLed();
+  
   }
 }
 
