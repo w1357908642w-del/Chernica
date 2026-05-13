@@ -7,7 +7,7 @@ void DeviceManager::begin(StorageManager* storage, DevicePublishCallback publish
 
   String json = storageManager->loadDevicesJson();
 
-  StaticJsonDocument<8192> doc;
+    DynamicJsonDocument doc(8192);
   DeserializationError error = deserializeJson(doc, json);
 
   if (error || !doc.is<JsonArray>()) {
@@ -132,7 +132,7 @@ bool DeviceManager::setDeviceStateFromJson(const String& json) {
 void DeviceManager::publishList() {
   if (!mqttPublish) return;
 
-  StaticJsonDocument<8192> doc;
+  DynamicJsonDocument doc(8192);
 
   doc["auth"]["login"] = DEVICE_LOGIN;
   doc["auth"]["password"] = DEVICE_PASSWORD;
@@ -145,10 +145,10 @@ void DeviceManager::publishList() {
     devices[i]->toJson(obj);
   }
 
-  char buffer[8192];
-  serializeJson(doc, buffer);
+String payload;
+serializeJson(doc, payload);
 
-  mqttPublish(TOPIC_DEVICES_LIST, buffer, true);
+mqttPublish(TOPIC_DEVICES_LIST, payload.c_str(), true);
 }
 
 void DeviceManager::publishDeviceState(BaseDevice* device) {
@@ -227,7 +227,7 @@ bool DeviceManager::parseConfig(JsonObject obj, DeviceConfig& cfg) {
 void DeviceManager::saveToStorage() {
   if (!storageManager) return;
 
-  StaticJsonDocument<8192> doc;
+  DynamicJsonDocument doc(8192);
   JsonArray arr = doc.to<JsonArray>();
 
   for (int i = 0; i < deviceCount; i++) {

@@ -7,6 +7,8 @@ void MqttManager::begin(MqttMessageCallback callback) {
   client.setServer(MQTT_HOST, MQTT_PORT);
   client.setCallback(callback);
   client.setSocketTimeout(1);
+
+   client.setBufferSize(2048);
 }
 
 void MqttManager::loop(bool wifiConnected) {
@@ -35,6 +37,10 @@ bool MqttManager::reconnect() {
     client.subscribe(TOPIC_DEVICES_DELETE);
     client.subscribe(TOPIC_DEVICES_SET);
     client.subscribe(TOPIC_DEVICES_REQUEST_LIST);
+    client.subscribe(TOPIC_SOIL_CREATE);
+    client.subscribe(TOPIC_SOIL_UPDATE);
+    client.subscribe(TOPIC_SOIL_DELETE);
+    client.subscribe(TOPIC_SOIL_REQUEST_LIST);
 
     return true;
   }

@@ -3,7 +3,8 @@
 
 enum DeviceType {
   DEVICE_GPIO,
-  DEVICE_WIFI_RELAY
+  DEVICE_WIFI_RELAY,
+  DEVICE_SOIL_SENSOR
 };
 
 struct DeviceConfig {
@@ -24,4 +25,10 @@ struct DeviceConfig {
   bool activeHigh = true;
 
   String ip = "";
+
+  int rawValue = 0;
+  int percentValue = 0;
+  int dryValue = 3200;
+  int wetValue = 1200;
 };
+

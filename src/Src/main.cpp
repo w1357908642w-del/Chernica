@@ -54,6 +54,13 @@ String jsonObjectToString(JsonObject obj) {
 
 void handleMqttMessage(char* topic, byte* payload, unsigned int length) {
   String message;
+  for (unsigned int i = 0; i < length; i++) {
+    message += (char)payload[i];
+  }
+  Serial.print("MQTT IN: ");
+  Serial.print(topic);
+  Serial.print(" ");
+  Serial.println(message);
 
   for (unsigned int i = 0; i < length; i++) {
     message += (char)payload[i];
@@ -105,6 +112,29 @@ void handleMqttMessage(char* topic, byte* payload, unsigned int length) {
   if (topicStr == TOPIC_DEVICES_REQUEST_LIST) {
     deviceManager.publishList();
   }
+  if (topicStr == TOPIC_SOIL_CREATE) {
+  JsonObject sensor = doc["sensor"];
+  soilSensor.createFromJson(jsonObjectToString(sensor));
+}
+
+if (topicStr == TOPIC_SOIL_UPDATE) {
+  JsonObject sensor = doc["sensor"];
+  soilSensor.updateFromJson(jsonObjectToString(sensor));
+}
+
+if (topicStr == TOPIC_SOIL_DELETE) {
+  StaticJsonDocument<128> d;
+  d["id"] = doc["id"] | "";
+
+  String json;
+  serializeJson(d, json);
+
+  soilSensor.deleteFromJson(json);
+}
+
+if (topicStr == TOPIC_SOIL_REQUEST_LIST) {
+  soilSensor.publishList();
+}
 }
 
 void sendSensors() {
@@ -119,7 +149,6 @@ void sendSensors() {
   doc["temperature"] = climateSensor.getTemperature();
   doc["humidity"] = climateSensor.getHumidity();
   doc["pressure"] = climateSensor.getPressure();
-  doc["soil_percent"] = soilSensor.getPercent();
 
   if (timeSensor.isReady()) {
     doc["time"] = timeSensor.getDate() + " " + timeSensor.getTime();
@@ -156,7 +185,7 @@ void setup() {
   timeSensor.begin();
 
   climateSensor.begin();
-  soilSensor.begin();
+  soilSensor.begin(mqttPublishCallback);
 
   wifiManager.begin();
   mqttManager.begin(handleMqttMessage);
@@ -174,7 +203,9 @@ void setup() {
 }
 
 void loop() {
-    blinkLed();
+  
+  blinkLed();
+
   wifiManager.loop();
   mqttManager.loop(wifiManager.isConnected());
 
@@ -206,6 +237,8 @@ void loop() {
     sendSensors();
   
   }
+
+  timeSensor.syncFromNtpIfNeeded(wifiManager.isConnected());
 }
 
 

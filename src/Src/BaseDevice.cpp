@@ -45,7 +45,18 @@ bool BaseDevice::shouldTurnOn(const String& currentDate, const String& currentTi
 
 bool BaseDevice::shouldTurnOff(const String& currentTime) {
   if (cfg.state != "ON") return false;
-  return currentTime >= cfg.turnOffTime;
+
+  // обычный период: 08:00 → 22:00
+  if (cfg.turnOnTime < cfg.turnOffTime) {
+    return currentTime >= cfg.turnOffTime;
+  }
+
+  // период через полночь: 23:00 → 01:00
+  if (cfg.turnOnTime > cfg.turnOffTime) {
+    return currentTime >= cfg.turnOffTime && currentTime < cfg.turnOnTime;
+  }
+
+  return false;
 }
 
 void BaseDevice::setManualState(const String& state) {

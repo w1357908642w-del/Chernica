@@ -37,3 +37,13 @@
 
 #define TOPIC_SENSORS "home/esp32/sensors"
 #define METRICS_SEND_INTERVAL 5000
+
+#define MAX_SOIL_SENSORS 6
+
+#define TOPIC_SOIL_LIST "home/esp32/soil/list"
+#define TOPIC_SOIL_STATE "home/esp32/soil/state"
+
+#define TOPIC_SOIL_CREATE "home/esp32/soil/create"
+#define TOPIC_SOIL_UPDATE "home/esp32/soil/update"
+#define TOPIC_SOIL_DELETE "home/esp32/soil/delete"
+#define TOPIC_SOIL_REQUEST_LIST "home/esp32/soil/request-list"
