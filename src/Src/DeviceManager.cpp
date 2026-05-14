@@ -136,7 +136,7 @@ void DeviceManager::publishList() {
 
   doc["auth"]["login"] = DEVICE_LOGIN;
   doc["auth"]["password"] = DEVICE_PASSWORD;
-  doc["device"] = MQTT_CLIENT_ID;
+  doc["device"] = DEVICE_LOGIN;
 
   JsonArray arr = doc.createNestedArray("devices");
 
@@ -158,7 +158,7 @@ void DeviceManager::publishDeviceState(BaseDevice* device) {
 
   doc["auth"]["login"] = DEVICE_LOGIN;
   doc["auth"]["password"] = DEVICE_PASSWORD;
-  doc["device"] = MQTT_CLIENT_ID;
+  doc["device"] = DEVICE_LOGIN;
 
   JsonObject obj = doc.createNestedObject("deviceData");
   device->toJson(obj);

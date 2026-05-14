@@ -29,7 +29,7 @@ void MqttManager::loop(bool wifiConnected) {
 }
 
 bool MqttManager::reconnect() {
-  if (client.connect(MQTT_CLIENT_ID, TOPIC_STATUS, 0, true, "offline")) {
+  if (client.connect(DEVICE_LOGIN, TOPIC_STATUS, 0, true, "offline")) {
     client.publish(TOPIC_STATUS, "online", true);
 
     client.subscribe(TOPIC_DEVICES_CREATE);

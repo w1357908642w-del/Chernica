@@ -1,11 +1,22 @@
 #pragma once
 
-class WiFiManagerCustom {
+#include <Arduino.h>
+
+class WIFIManager {
 public:
   void begin();
-  void loop();
+  void handle();
+
+  bool isSetupMode();
   bool isConnected();
 
 private:
-  unsigned long lastReconnectAttempt = 0;
+  bool setupMode = false;
+  unsigned long buttonPressedAt = 0;
+
+  void connectSavedWiFi();
+  void startSetupPortal();
+  void handleSetupButton();
+
+  String buildPage();
 };

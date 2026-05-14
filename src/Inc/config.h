@@ -1,14 +1,14 @@
 #pragma once
 
-#define WIFI_SSID "ded"
-#define WIFI_PASSWORD "23456789"
-
 #define MQTT_HOST "192.168.0.100"
 #define MQTT_PORT 1883
 
-#define MQTT_CLIENT_ID "esp32-2"
 #define DEVICE_LOGIN "esp32_2"
 #define DEVICE_PASSWORD "1234"
+
+#define WIFI_SETUP_BUTTON_PIN 0
+#define WIFI_SETUP_HOLD_MS 5000
+#define WIFI_CONNECT_TIMEOUT_MS 15000
 
 #define MAX_GPIO_DEVICES 8
 #define MAX_WIFI_RELAY_DEVICES 10
@@ -47,3 +47,4 @@
 #define TOPIC_SOIL_UPDATE "home/esp32/soil/update"
 #define TOPIC_SOIL_DELETE "home/esp32/soil/delete"
 #define TOPIC_SOIL_REQUEST_LIST "home/esp32/soil/request-list"
+

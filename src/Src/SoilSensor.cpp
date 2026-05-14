@@ -123,7 +123,7 @@ void SoilSensor::publishList() {
 
   doc["auth"]["login"] = DEVICE_LOGIN;
   doc["auth"]["password"] = DEVICE_PASSWORD;
-  doc["device"] = MQTT_CLIENT_ID;
+  doc["device"] = DEVICE_LOGIN;
 
   JsonArray arr = doc.createNestedArray("sensors");
 
@@ -153,7 +153,7 @@ void SoilSensor::publishState(int index) {
 
   doc["auth"]["login"] = DEVICE_LOGIN;
   doc["auth"]["password"] = DEVICE_PASSWORD;
-  doc["device"] = MQTT_CLIENT_ID;
+  doc["device"] = DEVICE_LOGIN;
 
   doc["sensor"]["id"] = soilItems[index].id;
   doc["sensor"]["name"] = soilItems[index].name;

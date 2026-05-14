@@ -11,7 +11,8 @@
 #include "inc/StorageManager.h"
 #include "inc/DeviceManager.h"
 
-WiFiManagerCustom wifiManager;
+
+WIFIManager wifiManager;
 MqttManager mqttManager;
 StorageManager storageManager;
 DeviceManager deviceManager;
@@ -21,14 +22,17 @@ SoilSensor soilSensor;
 
 
 
-void blinkLed() {
-    static uint32_t t;
-    static bool s;
+void blinkLed(unsigned long intervalMs) {
+  static unsigned long lastBlink = 0;
+  static bool state = false;
 
-    if (millis() - t > 1000) {
-        t = millis();
-        digitalWrite(2, s = !s);
-    }
+  if (millis() - lastBlink >= intervalMs) {
+    lastBlink = millis();
+
+    state = !state;
+
+    digitalWrite(2, state);
+  }
 }
 
 unsigned long lastDeviceTick = 0;
@@ -144,7 +148,7 @@ void sendSensors() {
 
   doc["auth"]["login"] = DEVICE_LOGIN;
   doc["auth"]["password"] = DEVICE_PASSWORD;
-  doc["device"] = MQTT_CLIENT_ID;
+  doc["device"] = DEVICE_LOGIN;
 
   doc["temperature"] = climateSensor.getTemperature();
   doc["humidity"] = climateSensor.getHumidity();
@@ -167,7 +171,7 @@ void sendStatus() {
 
   doc["auth"]["login"] = DEVICE_LOGIN;
   doc["auth"]["password"] = DEVICE_PASSWORD;
-  doc["device"] = MQTT_CLIENT_ID;
+  doc["device"] = DEVICE_LOGIN;
   doc["status"] = "online";
 
   char buffer[256];
@@ -204,9 +208,17 @@ void setup() {
 
 void loop() {
   
-  blinkLed();
+  if (WiFi.status() != WL_CONNECTED) {
+    blinkLed(200); // быстро
+  } else {
+    blinkLed(1000); // медленно
+  }
 
-  wifiManager.loop();
+  wifiManager.handle();
+  if (wifiManager.isSetupMode()) {
+    return;
+  }
+
   mqttManager.loop(wifiManager.isConnected());
 
   if (mqttManager.isConnected() && !listPublishedAfterConnect) {
